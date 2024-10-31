@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -27,7 +28,7 @@ namespace SimpleTelegramGame.Networking
          * #9: location.href      "*full URL*"
         **/
 
-        [System.Serializable]
+        [Serializable]
         public struct TestData
         {
             public string Protocol;
