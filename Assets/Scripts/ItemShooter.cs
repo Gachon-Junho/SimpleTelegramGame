@@ -15,39 +15,41 @@ public class ItemShooter : MonoBehaviour
     [SerializeField]
     private GameObject item;
 
+    [SerializeField]
+    private Vector2 itemPosition;
+
+    [SerializeField] 
+    private float resistanceStrength = 0.7f;
+
+    [SerializeField] private float forceMultiplier = 5;
+
     private Vector2 mouseDownPosition;
-    private Vector2 previousMousePosition;
-    private Vector2 delta;
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             mouseDownPosition = Input.mousePosition;
-            previousMousePosition = Input.mousePosition;
-            Debug.Log(mouseDownPosition);
         }
         else if (Input.GetMouseButton(0))
         {
             Vector2 currentMousePosition = Input.mousePosition;
-            delta = currentMousePosition - previousMousePosition;
 
-            var change = Camera.main!.ScreenToWorldPoint(Input.mousePosition) - Camera.main!.ScreenToWorldPoint(mouseDownPosition);
-            
-            Debug.Log(Input.mousePosition);
-            Debug.Log($"change: {change}");
+            var change = Camera.main!.ScreenToWorldPoint(currentMousePosition) - Camera.main!.ScreenToWorldPoint(mouseDownPosition);
 
-            change *= change.magnitude <= 0 ? 0 : MathF.Pow(change.magnitude, 0.7f) / change.magnitude;
+            change *= change.magnitude <= 0 ? 0 : MathF.Pow(change.magnitude, resistanceStrength) / change.magnitude;
 
             if (change.magnitude == 0)
                 return;
 
-            item.transform.position = new Vector3(0, -3.5f) + change + new Vector3(0, 0, 10);
+            item.transform.position = (Vector3)itemPosition + change;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            var rigidbody = item.GetComponent<Rigidbody2D>();
+            rigidbody.AddForce(-((Vector2)item.transform.position - itemPosition) * forceMultiplier, ForceMode2D.Impulse);
 
-            // item.transform.position = Vector3.MoveTowards(item.transform.position,
-            //     Camera.main!.ScreenToWorldPoint(change), float.MaxValue) + new Vector3(0, 0, 10);
-
-            previousMousePosition = currentMousePosition;
+            item = null;
         }
     }
 }
