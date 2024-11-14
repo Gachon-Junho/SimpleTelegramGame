@@ -32,7 +32,7 @@ public class ItemShooter : MonoBehaviour
             Vector2 currentMousePosition = Input.mousePosition;
             delta = currentMousePosition - previousMousePosition;
 
-            var change = Camera.main!.ScreenToWorldPoint(Input.mousePosition - (Vector3)mouseDownPosition);
+            var change = Camera.main!.ScreenToWorldPoint(Input.mousePosition) - Camera.main!.ScreenToWorldPoint(mouseDownPosition);
             
             Debug.Log(Input.mousePosition);
             Debug.Log($"change: {change}");
