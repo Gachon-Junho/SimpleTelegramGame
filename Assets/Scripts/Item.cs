@@ -12,14 +12,11 @@ public class Item : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(Rigidbody.velocity);
         lastVelocity = Rigidbody.velocity;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log("Collision Enter");
-        
         if (other.gameObject.CompareTag("ConfineWall"))
         {
             var newVelocity = Vector2.Reflect(lastVelocity, other.contacts[0].normal);
