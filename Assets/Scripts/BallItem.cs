@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Item : MonoBehaviour
+public class BallItem : MonoBehaviour
 {
     public Rigidbody2D Rigidbody => rigidbody ??= GetComponent<Rigidbody2D>();
     

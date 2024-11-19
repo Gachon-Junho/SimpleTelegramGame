@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class ItemShooter : MonoBehaviour
+public class BallItemShooter : MonoBehaviour
 {
     public GameObject Item
     {
