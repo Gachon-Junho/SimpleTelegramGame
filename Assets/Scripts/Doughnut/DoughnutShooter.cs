@@ -1,7 +1,8 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
-public class BallItemShooter : MonoBehaviour
+public class DoughnutShooter : MonoBehaviour
 {
     public GameObject Item
     {
@@ -18,12 +19,23 @@ public class BallItemShooter : MonoBehaviour
     [SerializeField] 
     private float resistanceStrength = 0.7f;
 
-    [SerializeField] private float forceMultiplier = 5;
+    [SerializeField] 
+    private float forceMultiplier = 5;
 
     private Vector2 mouseDownPosition;
 
+    private RandomDoughnutQueue queue => GameplayManager.Current.RandomDoughnutQueue;
+
+    private void Start()
+    {
+        StartCoroutine(addDoughnut());
+    }
+
     void Update()
     {
+        if (Item == null)
+            return;
+        
         if (Input.GetMouseButtonDown(0))
         {
             mouseDownPosition = Input.mousePosition;
@@ -45,8 +57,22 @@ public class BallItemShooter : MonoBehaviour
         {
             var rigidbody = item.GetComponent<Rigidbody2D>();
             rigidbody.AddForce(-((Vector2)item.transform.position - itemPosition) * forceMultiplier, ForceMode2D.Impulse);
-
-            item = null;
+            rigidbody.gravityScale = -0.5f;
+            
+            this.StartDelayedCoroutine(addDoughnut(), 0.6f);
         }
+    }
+
+    private IEnumerator addDoughnut()
+    {
+        var doughnut = queue.Get();
+        
+        item = doughnut.gameObject;
+        item.transform.position = itemPosition;
+        
+        doughnut.transform.localScale = Vector3.zero;
+        doughnut.ScaleTo(Vector3.one, 0.7f, Easing.OutElastic);
+
+        yield return null;
     }
 }
