@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cefa1378b81c430d88fb020cfd6c8f03, type: 3}
   m_Name: Dought2
   m_EditorClassIdentifier: 
-  Type: 2
-  Sprite: {fileID: 21300000, guid: 4db1b368a229ea64ab14c0055556f1db, type: 3}
+  Level: 2
+  Scale: 1.2
+  Score: 120
+  Sprite: {fileID: 21300000, guid: 854a0ad962f3b8c4ab3919255002826b, type: 3}
   Doughnut: {fileID: 1387567953992316899, guid: a9beef06624ae72448695d20c8c08d48, type: 3}
