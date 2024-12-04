@@ -1,72 +1,38 @@
+using UnityEngine;
 using SimpleTelegramGame.Networking.Encryption;
 using System.Collections;
-using UnityEngine;
 using UnityEngine.Networking;
+using System.Collections.Generic;
+using System.IO;
 
 namespace SimpleTelegramGame.Networking
 {
     public class ConnectionManager : MonoBehaviour
     {
-        [Tooltip("The end point where the score will be read & handled on your app")]
-        [SerializeField] 
-        private string serverURI = "https://example.com/highscore/";
+        [Tooltip("The path to the .env file")]
+        [SerializeField]
+        private string envFilePath = "D:/GCUnity/T/simple-telegram-game-backend/.env"; // .env 파일 경로
 
-        [Tooltip("Big prime numbers to provide a basic security when sending score to the app")]
-        [SerializeField] 
-        private long[] scoreToken = { };
+        private string serverURI;
+        private string token;
 
-        private IEncryptor obfuscation;
-
-        private string playerId = "";
-        private bool dontSend = false;
-
-        void Start()
+        private void Start()
         {
-            obfuscation = new BasicEncryptor(scoreToken);
-
-#if UNITY_EDITOR
-            dontSend = true;
-#elif UNITY_WEBGL
-        // The telegram game is launched with the player id as parameter 
-        playerId = URLParameters.GetSearchParameters()["id"];
-        // Debug.Log("Got playerId: " + playerId);
-#endif
-        }
-
-
-        public void SendScore(int score)
-        {
-            StartCoroutine(SendScoreCor(score));
-        }
-        IEnumerator SendScoreCor(int score)
-        {
-            // Debug.Log("Asked score: " + score.ToString());
-
-            if (dontSend || playerId == "") yield break;
-
-            long obfuscatedScore = obfuscation.Obfuscate(long.Parse(playerId), score);
-
-            string uri = serverURI + obfuscatedScore.ToString() + "?id=" + playerId;
-            using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+            try
             {
-                // Request and wait for the desired page.
-                yield return webRequest.SendWebRequest();
+                // .env 파일에서 환경 변수 로드
+                EnvLoader.Load(envFilePath);  // .env 파일을 로드만 하고 반환값을 받지 않음
 
-                switch (webRequest.result)
-                {
-                    case UnityWebRequest.Result.ConnectionError:
-                        Debug.LogError("Error sending score: " + webRequest.error);
-                        break;
-                    case UnityWebRequest.Result.DataProcessingError:
-                        Debug.LogError("Error sending score: " + webRequest.error);
-                        break;
-                    case UnityWebRequest.Result.ProtocolError:
-                        Debug.LogError("Error sending score: " + webRequest.error);
-                        break;
-                    case UnityWebRequest.Result.Success:
-                        Debug.Log("Success sending score");
-                        break;
-                }
+                // 환경 변수 사용
+                serverURI = EnvLoader.Get("SERVER_URI") ?? "https://defaultserver.com";
+                token = EnvLoader.Get("TOKEN") ?? "default_token";
+
+                Debug.Log($"Server URI: {serverURI}");
+                Debug.Log($"Token: {token}");
+            }
+            catch (FileNotFoundException ex)
+            {
+                Debug.LogError(ex.Message);
             }
         }
     }
