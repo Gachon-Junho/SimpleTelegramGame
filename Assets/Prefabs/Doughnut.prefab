@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e32e1d21b585476985b8148fcae22927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 1
+  DoughnutLevel: {fileID: 11400000, guid: 43f645772b16c134da34f2755352d3a4, type: 2}
   sprite: {fileID: 0}
   spriteRenderer: {fileID: 8937256761022666115}
 --- !u!50 &7585907046404506773
@@ -62,8 +62,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1.5
-  m_LinearDrag: 1
+  m_Mass: 1.1
+  m_LinearDrag: 0.33
   m_AngularDrag: 1.5
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -111,7 +111,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.65
+  m_Radius: 0.25
 --- !u!1 &4930014307809935248
 GameObject:
   m_ObjectHideFlags: 0
@@ -139,7 +139,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 324647722839679555}
@@ -185,7 +185,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 58a9fc07111dfb945b4c4ab26f8fe338, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1b9676f1d0d4c664bb1a22845cbfe191, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

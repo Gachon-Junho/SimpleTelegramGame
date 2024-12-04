@@ -59,7 +59,7 @@ public class DoughnutShooter : MonoBehaviour
             rigidbody.AddForce(-((Vector2)item.transform.position - itemPosition) * forceMultiplier, ForceMode2D.Impulse);
             rigidbody.gravityScale = -0.5f;
             
-            this.StartDelayedCoroutine(addDoughnut(), 0.6f);
+            this.StartDelayedCoroutine(addDoughnut(), 0.7f);
         }
     }
 
@@ -70,8 +70,8 @@ public class DoughnutShooter : MonoBehaviour
         item = doughnut.gameObject;
         item.transform.position = itemPosition;
         
-        doughnut.transform.localScale = Vector3.zero;
-        doughnut.ScaleTo(Vector3.one, 0.7f, Easing.OutElastic);
+        //doughnut.transform.localScale = Vector3.zero;
+        //doughnut.ScaleTo(Vector3.one, 0.7f, Easing.OutElastic);
 
         yield return null;
     }

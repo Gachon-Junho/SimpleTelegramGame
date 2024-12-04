@@ -65,8 +65,9 @@ public class RandomDoughnutQueue : MonoBehaviour
         {
             var doughnutType = nextDoughnut.Invoke();
 
-            if (bag.Contains(Doughnuts[doughnutType]))
-                continue;
+            // 중복을 허용해서 게임플레이에 불편함이 생기지 않도록 함
+            // if (bag.Contains(Doughnuts[doughnutType]))
+            //     continue;
 
             bag.Add(Doughnuts[doughnutType]);
             count++;

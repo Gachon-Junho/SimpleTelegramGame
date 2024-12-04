@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "DoughtInfo", menuName = "Doughnut/Dought Info", order = 0)]
 public class DoughnutInfo : ScriptableObject
 {
-    public int Type;
+    public int Level;
+    public float Scale;
+    public int Score;
     public Sprite Sprite;
     public GameObject Doughnut;
 
@@ -11,8 +14,9 @@ public class DoughnutInfo : ScriptableObject
     {
         var obj = Instantiate(Doughnut).GetComponent<Doughnut>();
 
-        obj.Type = Type;
+        obj.Level = Level;
         obj.Sprite = Sprite;
+        obj.Score = Score;
 
         return obj;
     }

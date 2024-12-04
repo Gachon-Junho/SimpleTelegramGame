@@ -1,25 +1,38 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class Doughnut : MonoBehaviour
 {
+    public DoughnutLevel DoughnutLevel;
+    
     public int Level
     {
         get => level;
         set
         {
-            if (level == value)
+            if (level == value || DoughnutLevel.SpritePerLevel.Count <= level)
                 return;
             
             onLevelChanged?.Invoke();
+            GameplayManager.Current.Score += Score;
             
             level = value;
+            name = $"Level {value}";
             
-            this.ScaleTo(transform.localScale + new Vector3(0.3f, 0.3f, 0.3f), 0.6f, Easing.InOutBack);
-            Rigidbody.mass += value;
+            var next = DoughnutLevel.SpritePerLevel.FirstOrDefault(d => d.Level == value);
+
+            if (next == null)
+                return;
+            
+            this.ScaleTo(new Vector3(next.Scale, next.Scale, next.Scale), 0.5f, Easing.InOutBack);
+            Sprite = next.Sprite;
         }
     }
+
+    public int Score;
 
     public Sprite Sprite
     {
@@ -31,21 +44,9 @@ public class Doughnut : MonoBehaviour
         }
     }
 
-    public int Type
-    {
-        get => type;
-        set
-        {
-            type = value;
-        }
-    }
-
     private Action onLevelChanged;
 
-    private int level = 1;
-
-    [SerializeField]
-    private int type;
+    private int level;
     
     [SerializeField]
     private Sprite sprite;
@@ -88,13 +89,13 @@ public class Doughnut : MonoBehaviour
             Rigidbody.gravityScale = -1;
             
             // 같은 도넛이고, 자신의 레벨이 낮거나 활발히 움직이고 있다면 사라짐.
-            if (type != d.Type || level > d.Level || Rigidbody.velocity.magnitude < d.Rigidbody.velocity.magnitude)
+            if (level != d.Level || Rigidbody.velocity.magnitude < d.Rigidbody.velocity.magnitude || level == DoughnutLevel.SpritePerLevel.Count)
                 return;
             
             d.Level++;
             Rigidbody.velocity = Vector2.zero;
             
-            this.ScaleTo(Vector3.zero, 0.25f, Easing.OutPow10, () => Destroy(gameObject));
+            this.ScaleTo(Vector3.zero, 0.33f, Easing.OutPow10, () => Destroy(gameObject));
         }
         else
         {
