@@ -63,12 +63,15 @@ public class DoughnutShooter : MonoBehaviour
 
             item.GetComponent<Collider2D>().enabled = true;
             item.GetComponent<Doughnut>().State = DoughnutState.Moving;
+
+            if (((Vector2)item.transform.position - itemPosition).magnitude < 0.01f)
+                return;
             
             rigidbody.AddForce(-((Vector2)item.transform.position - itemPosition) * forceMultiplier, ForceMode2D.Impulse);
             rigidbody.gravityScale = -0.5f;
             
             source.Play();
-            
+            item = null;
             this.StartDelayedCoroutine(addDoughnut(), 1f);
         }
     }

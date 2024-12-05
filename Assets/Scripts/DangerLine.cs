@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class DangerLine : MonoBehaviour
@@ -9,8 +10,15 @@ public class DangerLine : MonoBehaviour
 
         if (doughnut == null)
             return;
-        
+
         if (doughnut.State == DoughnutState.Completed)
-            GameplayManager.Current.FinishGame();
+            this.StartDelayedCoroutine(finish(), 1);
+    }
+
+    private IEnumerator finish()
+    {
+        GameplayManager.Current.FinishGame();
+
+        yield return null;
     }
 }

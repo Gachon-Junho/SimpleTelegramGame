@@ -70,17 +70,16 @@ public class Doughnut : MonoBehaviour
     {
         lastVelocity = Rigidbody.velocity;
         
-        if (Rigidbody.velocity.magnitude <= 0.05f)
+        if (Rigidbody.velocity.magnitude <= 0.01f)
+        {
             State = DoughnutState.Completed;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (State == DoughnutState.Completed && other.gameObject.CompareTag("GameOverLine"))
-        {
-            GameplayManager.Current.FinishGame();
+        if (State == DoughnutState.Completed)
             return;
-        }
         
         var newVelocity = Vector2.Reflect(lastVelocity, other.contacts[0].normal);
         
@@ -96,13 +95,14 @@ public class Doughnut : MonoBehaviour
             Rigidbody.gravityScale = -1;
             
             // 같은 도넛이고, 자신의 레벨이 낮거나 활발히 움직이고 있다면 사라짐.
-            if (level != d.Level || Rigidbody.velocity.magnitude < d.Rigidbody.velocity.magnitude || level == DoughnutLevel.SpritePerLevel.Count)
+            if (level != d.Level || transform.position.y > d.transform.position.y || level == DoughnutLevel.SpritePerLevel.Count)
                 return;
             
             d.Level++;
             d.AudioSource.Play();
             Rigidbody.velocity = Vector2.zero;
             
+            StopAllCoroutines();
             this.ScaleTo(Vector3.zero, 0.5f, Easing.OutQuint, () => Destroy(gameObject));
         }
         else
@@ -111,6 +111,39 @@ public class Doughnut : MonoBehaviour
             Rigidbody.velocity = Vector2.zero;
             Rigidbody.angularVelocity = 0;
             State = DoughnutState.Completed;
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D other)
+    {
+        if (State != DoughnutState.Completed)
+            return;
+        
+        if (other.gameObject.CompareTag("GameOverLine"))
+        {
+            GameplayManager.Current.FinishGame();
+            return;
+        }
+        
+        var newVelocity = Vector2.Reflect(lastVelocity, other.contacts[0].normal);
+        
+        if (other.gameObject.CompareTag("Doughnut"))
+        {
+            var d = other.gameObject.GetComponent<Doughnut>();
+
+            Rigidbody.velocity = newVelocity;
+            Rigidbody.gravityScale = -1;
+            
+            // 같은 도넛이고, 자신의 레벨이 낮거나 활발히 움직이고 있다면 사라짐.
+            if (level != d.Level || transform.position.y > d.transform.position.y || level == DoughnutLevel.SpritePerLevel.Count)
+                return;
+            
+            d.Level++;
+            d.AudioSource.Play();
+            Rigidbody.velocity = Vector2.zero;
+            
+            StopAllCoroutines();
+            this.ScaleTo(Vector3.zero, 0.5f, Easing.OutQuint, () => Destroy(gameObject));
         }
     }
 }
