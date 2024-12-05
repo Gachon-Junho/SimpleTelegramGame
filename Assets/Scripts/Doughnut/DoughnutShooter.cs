@@ -22,6 +22,9 @@ public class DoughnutShooter : MonoBehaviour
     [SerializeField] 
     private float forceMultiplier = 5;
 
+    [SerializeField] 
+    private AudioSource source;
+
     private Vector2 mouseDownPosition;
 
     private RandomDoughnutQueue queue => GameplayManager.Current.RandomDoughnutQueue;
@@ -56,22 +59,30 @@ public class DoughnutShooter : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             var rigidbody = item.GetComponent<Rigidbody2D>();
+            rigidbody.simulated = true;
+
+            item.GetComponent<Collider2D>().enabled = true;
+            item.GetComponent<Doughnut>().State = DoughnutState.Moving;
+            
             rigidbody.AddForce(-((Vector2)item.transform.position - itemPosition) * forceMultiplier, ForceMode2D.Impulse);
             rigidbody.gravityScale = -0.5f;
             
-            this.StartDelayedCoroutine(addDoughnut(), 0.7f);
+            source.Play();
+            
+            this.StartDelayedCoroutine(addDoughnut(), 1f);
         }
     }
 
     private IEnumerator addDoughnut()
     {
+        var scale = queue.Next.Scale;
         var doughnut = queue.Get();
         
         item = doughnut.gameObject;
         item.transform.position = itemPosition;
         
-        //doughnut.transform.localScale = Vector3.zero;
-        //doughnut.ScaleTo(Vector3.one, 0.7f, Easing.OutElastic);
+        doughnut.transform.localScale = Vector3.zero;
+        doughnut.ScaleTo(new Vector3(scale, scale, scale), 0.7f, Easing.OutElastic);
 
         yield return null;
     }

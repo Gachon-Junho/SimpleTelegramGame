@@ -34,6 +34,8 @@ public class Doughnut : MonoBehaviour
 
     public int Score;
 
+    public DoughnutState State;
+
     public Sprite Sprite
     {
         get => sprite;
@@ -44,6 +46,8 @@ public class Doughnut : MonoBehaviour
         }
     }
 
+    public AudioSource AudioSource;
+
     private Action onLevelChanged;
 
     private int level;
@@ -53,25 +57,30 @@ public class Doughnut : MonoBehaviour
 
     [SerializeField] 
     private SpriteRenderer spriteRenderer;
+
+    [SerializeField] 
+    private AudioClip clip;
     
     public Rigidbody2D Rigidbody => rigidbody ??= GetComponent<Rigidbody2D>();
     
     private Rigidbody2D rigidbody;
     private Vector2 lastVelocity;
 
-    private void Awake()
-    {
-    }
-
     private void Update()
     {
         lastVelocity = Rigidbody.velocity;
+        
+        if (Rigidbody.velocity.magnitude <= 0.05f)
+            State = DoughnutState.Completed;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (Rigidbody.velocity == Vector2.zero)
+        if (State == DoughnutState.Completed && other.gameObject.CompareTag("GameOverLine"))
+        {
+            GameplayManager.Current.FinishGame();
             return;
+        }
         
         var newVelocity = Vector2.Reflect(lastVelocity, other.contacts[0].normal);
         
@@ -82,8 +91,6 @@ public class Doughnut : MonoBehaviour
         else if (other.gameObject.CompareTag("Doughnut"))
         {
             var d = other.gameObject.GetComponent<Doughnut>();
-            
-            Debug.Log($"{d}, {Rigidbody.gravityScale}");
 
             Rigidbody.velocity = newVelocity;
             Rigidbody.gravityScale = -1;
@@ -93,15 +100,17 @@ public class Doughnut : MonoBehaviour
                 return;
             
             d.Level++;
+            d.AudioSource.Play();
             Rigidbody.velocity = Vector2.zero;
             
-            this.ScaleTo(Vector3.zero, 0.33f, Easing.OutPow10, () => Destroy(gameObject));
+            this.ScaleTo(Vector3.zero, 0.5f, Easing.OutQuint, () => Destroy(gameObject));
         }
         else
         {
             Rigidbody.gravityScale = -1;
             Rigidbody.velocity = Vector2.zero;
             Rigidbody.angularVelocity = 0;
+            State = DoughnutState.Completed;
         }
     }
 }
