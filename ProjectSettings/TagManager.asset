@@ -3,11 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - ConfineWall
-  - DIsh
-  - Doughnut
-  - GameOverLine
+  tags: []
   layers:
   - Default
   - TransparentFX
