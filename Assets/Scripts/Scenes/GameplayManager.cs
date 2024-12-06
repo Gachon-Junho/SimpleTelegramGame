@@ -20,21 +20,25 @@ public class GameplayManager : Singleton<GameplayManager>
            IEnumerator transformLoop(int to, double startTime, double endTime)
            {
                var start = score;
-                
-               while (Time.time < endTime)
-               {
-                   scoreText.text = $"{Interpolation.ValueAt(Time.time, start, to, startTime, endTime, new EasingFunction(Easing.OutQuint)):D6}";
 
-                   yield return null;
-               }
-           }
+                while (Time.time < endTime)
+                {
+                    // 텍스트 배열 업데이트
+                    foreach (var text in scoreText)
+                    {
+                        text.text = $"{Interpolation.ValueAt(Time.time, start, to, startTime, endTime, new EasingFunction(Easing.OutQuint)):D6}";
+                    }
+
+                    yield return null;
+                }
+            }
         }
     }
 
     private int score;
 
     [SerializeField]
-    private TMP_Text scoreText;
+    private TMP_Text[] scoreText;
     public DoughnutShooter Shooter => shooter;
     
     [SerializeField]
@@ -45,6 +49,8 @@ public class GameplayManager : Singleton<GameplayManager>
 
     [SerializeField] 
     private GameObject gameOverOverlay;
+
+
 
     private void Start()
     {
