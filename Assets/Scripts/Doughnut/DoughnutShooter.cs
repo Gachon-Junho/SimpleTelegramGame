@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class DoughnutShooter : MonoBehaviour
 {
@@ -29,6 +31,8 @@ public class DoughnutShooter : MonoBehaviour
 
     private RandomDoughnutQueue queue => GameplayManager.Current.RandomDoughnutQueue;
 
+    private bool selected;
+
     private void Start()
     {
         StartCoroutine(addDoughnut());
@@ -45,6 +49,9 @@ public class DoughnutShooter : MonoBehaviour
         }
         else if (Input.GetMouseButton(0))
         {
+            if (!selected)
+                return;
+            
             Vector2 currentMousePosition = Input.mousePosition;
 
             var change = Camera.main!.ScreenToWorldPoint(currentMousePosition) - Camera.main!.ScreenToWorldPoint(mouseDownPosition);
@@ -88,5 +95,15 @@ public class DoughnutShooter : MonoBehaviour
         doughnut.ScaleTo(new Vector3(scale, scale, scale), 0.7f, Easing.OutElastic);
 
         yield return null;
+    }
+
+    private void OnMouseDown()
+    {
+        selected = true;
+    }
+
+    private void OnMouseUp()
+    {
+        selected = false;
     }
 }

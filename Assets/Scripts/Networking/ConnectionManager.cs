@@ -1,38 +1,60 @@
-using UnityEngine;
 using SimpleTelegramGame.Networking.Encryption;
 using System.Collections;
+using UnityEngine;
 using UnityEngine.Networking;
-using System.Collections.Generic;
-using System.IO;
-
 namespace SimpleTelegramGame.Networking
 {
     public class ConnectionManager : MonoBehaviour
     {
-        [Tooltip("The path to the .env file")]
-        [SerializeField]
-        private string envFilePath = "D:/GCUnity/T/simple-telegram-game-backend/.env"; // .env 파일 경로
+        [Tooltip("The end point where the score will be read & handled on your app")]
+        [SerializeField] 
+        private string serverURI = "https://example.com/highscore/";
 
-        private string serverURI;
-        private string token;
-
-        private void Start()
+        private string playerId = "123123";
+        private bool dontSend = false;
+        
+        void Start()
         {
-            try
-            {
-                // .env 파일에서 환경 변수 로드
-                EnvLoader.Load(envFilePath);  // .env 파일을 로드만 하고 반환값을 받지 않음
+#if UNITY_WEBGL
+        // The telegram game is launched with the player id as parameter 
+        playerId = URLParameters.GetSearchParameters()["id"];
+        // Debug.Log("Got playerId: " + playerId);
+#endif
+        }
+        
+        public void SendScore(int score)
+        {
+            StartCoroutine(SendScoreCor(score));
+        }
+        
+        IEnumerator SendScoreCor(int score)
+        {
+            if (dontSend || playerId == "") yield break;
 
-                // 환경 변수 사용
-                serverURI = EnvLoader.Get("SERVER_URI") ?? "https://defaultserver.com";
-                token = EnvLoader.Get("TOKEN") ?? "default_token";
-
-                Debug.Log($"Server URI: {serverURI}");
-                Debug.Log($"Token: {token}");
-            }
-            catch (FileNotFoundException ex)
+            string uri = serverURI + score + "?id=" + playerId;
+            
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
             {
-                Debug.LogError(ex.Message);
+                yield return webRequest.SendWebRequest();
+                
+                switch (webRequest.result)
+                {
+                    case UnityWebRequest.Result.ConnectionError:
+                        Debug.LogError("Error sending score: " + webRequest.error);
+                        break;
+                    
+                    case UnityWebRequest.Result.DataProcessingError:
+                        Debug.LogError("Error sending score: " + webRequest.error);
+                        break;
+                    
+                    case UnityWebRequest.Result.ProtocolError:
+                        Debug.LogError("Error sending score: " + webRequest.error);
+                        break;
+                    
+                    case UnityWebRequest.Result.Success:
+                        Debug.Log("Success sending score");
+                        break;
+                }
             }
         }
     }
