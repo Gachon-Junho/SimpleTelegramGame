@@ -99,7 +99,10 @@ public class DoughnutShooter : MonoBehaviour
 
     private void OnMouseDown()
     {
-        selected = true;
+        if (Time.timeScale != 0)
+        {
+            selected = true;
+        }
     }
 
     private void OnMouseUp()
