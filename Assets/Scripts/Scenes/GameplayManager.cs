@@ -23,7 +23,6 @@ public class GameplayManager : Singleton<GameplayManager>
 
                 while (Time.time < endTime)
                 {
-                    // 텍스트 배열 업데이트
                     foreach (var text in scoreText)
                     {
                         text.text = $"{Interpolation.ValueAt(Time.time, start, to, startTime, endTime, new EasingFunction(Easing.OutQuint)):D6}";

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
-    [SerializeField] private GameObject pauseOverlay;      // 일시정지 UI
+    [SerializeField] private GameObject pauseOverlay;
 
     private bool isPaused = false;
 
@@ -14,12 +14,12 @@ public class GameStateManager : MonoBehaviour
 
         if (isPaused)
         {
-            Time.timeScale = 0f; // 게임 멈춤
+            Time.timeScale = 0f;
             pauseOverlay.SetActive(true);
         }
         else
         {
-            Time.timeScale = 1f; // 게임 재개
+            Time.timeScale = 1f;
             pauseOverlay.SetActive(false);
         }
     }
