@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Level: 4
   Scale: 1.6
-  Score: 160
+  Score: 264
   Sprite: {fileID: 21300000, guid: ebcbd8fc01138dd40a21ab5a11d45eab, type: 3}
   Doughnut: {fileID: 1387567953992316899, guid: a9beef06624ae72448695d20c8c08d48, type: 3}

@@ -125,14 +125,9 @@ public class Doughnut : MonoBehaviour
             return;
         }
         
-        var newVelocity = Vector2.Reflect(lastVelocity, other.contacts[0].normal);
-        
         if (other.gameObject.CompareTag("Doughnut"))
         {
             var d = other.gameObject.GetComponent<Doughnut>();
-
-            Rigidbody.velocity = newVelocity;
-            Rigidbody.gravityScale = -1;
             
             // 같은 도넛이고, 자신의 레벨이 낮거나 활발히 움직이고 있다면 사라짐.
             if (level != d.Level || transform.position.y > d.transform.position.y || level == DoughnutLevel.SpritePerLevel.Count)
