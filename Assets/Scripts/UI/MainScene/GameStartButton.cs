@@ -7,6 +7,6 @@ public class GameStartButton : MonoBehaviour
 {
     public void GoToGameplayScene()
     {
-        SceneManager.LoadScene("GameplayScene");
+        this.LoadSceneAsync("GameplayScene");
     }
 }

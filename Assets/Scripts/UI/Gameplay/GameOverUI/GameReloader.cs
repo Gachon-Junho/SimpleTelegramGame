@@ -7,7 +7,7 @@ public class GameReloader : MonoBehaviour
 {
     public void ReloadScene()
     {
-        // Scene º¯°æ
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        // Scene ï¿½ï¿½ï¿½ï¿½
+        this.LoadSceneAsync(SceneManager.GetActiveScene().name);
     }
 }
