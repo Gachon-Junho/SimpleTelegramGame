@@ -23,11 +23,10 @@ public class DangerLine : MonoBehaviour
         if (doughnut == null)
             yield break;
 
-        if (doughnut.State == DoughnutState.Completed && !finishRequested)
+        if (doughnut.State == DoughnutState.Completed)
         {
             finishRequested = true;
             
-            StartCoroutine(flashColor());
             this.StartDelayedCoroutine(finish(), 1.5f);
         }
     }
@@ -36,6 +35,8 @@ public class DangerLine : MonoBehaviour
     {
         canceled = true;
         finishRequested = false;
+        
+        StopAllCoroutines();
     }
 
     private IEnumerator flashColor()
