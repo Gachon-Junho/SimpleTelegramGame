@@ -40,12 +40,6 @@ public class DangerLine : MonoBehaviour
 
     private IEnumerator flashColor()
     {
-        if (canceled)
-        {
-            canceled = false;
-            yield break;
-        }
-        
         var origin = line.color;
         
         line.color = new Color(1, 1, 1, line.color.a);
@@ -57,15 +51,6 @@ public class DangerLine : MonoBehaviour
     
     private IEnumerator transformLoop(Color to, double startTime, double endTime, Action<float> after = null)
     {
-        if (canceled)
-        {
-            canceled = false;
-
-            line.color = to;
-            
-            yield break;
-        }
-        
         var origin = line.color;
 
         while (Time.time < endTime)
